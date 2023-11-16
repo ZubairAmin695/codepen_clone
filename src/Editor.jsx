@@ -1,66 +1,77 @@
 import React, { useEffect, useState } from "react";
-
+import useLocalStorage from "./storage";
 function Editor() {
-  const [html, setHtml] = useState("");
+  const [html, setHtml] = useLocalStorage("html","");
 
-  const [css, setCss] = useState("");
-  const [js, setJs] = useState("");
-const [codepenCode,setCodepenCode]=useState("");
+  const [css, setCss] = useLocalStorage("css","");
+  const [js, setJs] = useLocalStorage("js","");
+  const [codepenCode, setCodepenCode] = useState("");
 
-
-useEffect(()=>{
-    const timeout =setTimeout(()=>{
-        setCodepenCode(
-            `<html>
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setCodepenCode(
+        `<html>
+          <head>
             <style>${css}</style>
-            <script>${js}</script>
-            <body>${html}</body>
-          
-            </html>
-            `
-        )
-    },200)
+          </head>
+          <body>${html}</body>
+          <script>${js}</script>
+        </html>`
+      );
+    }, 200);
 
-    return ()=>clearTimeout(timeout)
-},[html,css,js])
+    return () => clearTimeout(timeout);
+  }, [html, css, js]);
 
   return (
-    <div>
-      <div>
+    <div className="wrapper">
+      <div className="header">
+        <span>CodePen</span>
+      </div>
+      <div className="input-cover">
         <textarea
           value={html}
           type="text"
+          placeholder="HTML"
+          className="input"
           onChange={(e) => {
             setHtml(e.target.value);
           }}
         />
 
+        <div className="width" />
+
         <textarea
           value={css}
           type="text"
+          placeholder="CSS"
+          className="input"
           onChange={(e) => {
             setCss(e.target.value);
           }}
         />
+
+        <div className="width" />
         <textarea
           value={js}
           type="text"
+          placeholder="Js"
+          className="input"
           onChange={(e) => {
             setJs(e.target.value);
           }}
         />
       </div>
 
-      <div>
-<iframe 
-srcDoc={codepenCode}
-title="output"
-sandbox="allow-scripts"
-frameBorder="0"
-width="100%"
-height="100%"/>
-    
-
+      <div className="output">
+        <iframe
+          srcDoc={codepenCode}
+          title="output"
+          sandbox="allow-scripts"
+          frameBorder="0"
+          width="100%"
+          height="100%"
+        />
       </div>
     </div>
   );
